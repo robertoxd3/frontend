@@ -1,0 +1,136 @@
+<div class="container mt-3">
+  <div class="card">
+    <p-tabView styleClass="tabview-custom">
+      <p-tabPanel>
+        <ng-template pTemplate="header">
+          <i class="pi pi-file"></i>
+          <span class="ms-2">Documentos</span>
+        </ng-template>
+        <div *ngIf="isloading" class="overlay">
+          <p-progressSpinner
+            styleClass="w-4rem h-4rem"
+            strokeWidth="8"
+            fill="var(--surface-ground)"
+            animationDuration=".5s"
+          ></p-progressSpinner>
+        </div>
+        <div class="container-fluid">
+          <div class="row flex justify-content-center item-align-center">
+            <div class="col-4 p-3">
+              <h4>{{ fecha }}</h4>
+            </div>
+            <div class="col-8">
+              <div class="p-inputgroup p-3">
+                <input
+                  type="text"
+                  pInputText
+                  [(ngModel)]="searchTerm"
+                  (input)="filterDocuments()"
+                  placeholder="Buscar Documento"
+                />
+                <button
+                  pButton
+                  type="button"
+                  (click)="filterDocuments()"
+                  icon="pi pi-search"
+                ></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo Archivo</th>
+                  <th>Extención</th>
+                  <!-- <th>Preview</th> -->
+                  <th>Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let file of filteredDocument">
+                  <td>{{ file.fileName }}</td>
+
+                  <td>{{ file.contentType }}</td>
+                  <td>{{ file.fileFormat }}</td>
+                  <!-- <td>
+                          <img src="https://localhost:7230/Imagen.jfif" width="100"> 
+                          <iframe [src]="baseUrlC+file.fileName | safe: 'resourceUrl'" width='100%' height='100%' frameborder='0'></iframe>
+                        </td> -->
+                  <td>
+                    <input
+                      type="button"
+                      class="btn btn-success"
+                      (click)="downloadFile(file.id, file.contentType)"
+                      value="Download"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p-paginator
+            [rows]="perPage"
+            [totalRecords]="totalDocuments"
+            (onPageChange)="onPageChange($event)"
+          >
+          </p-paginator>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Header II">
+        <ng-template pTemplate="header">
+          <i class="pi pi-upload"></i>
+          <span class="ms-2">Subir Documento</span>
+        </ng-template>
+        <div>
+          <div class="container-fluid">
+            <h2>Formulario</h2>
+            <form [formGroup]="fileForm" (ngSubmit)="saveFileInfo()">
+              <div class="form-group">
+                <label for="file">Archivo:</label>
+                <p-fileUpload
+                  #fileUploadComponent
+                  mode="basic"
+                  name="file"
+                  [showCancelButton]="true"
+                  (onSelect)="onSelectFile($event.files)"
+                  chooseLabel="Seleccione archivos a adjuntar"
+                  accept="image/*, .pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  [maxFileSize]="1000000"
+                  [multiple]="true"
+                ></p-fileUpload>
+                <!-- <input type="file" class="form-control" (change)="handleFileInput($event)" name="file"> -->
+              </div>
+              <div class="form-group">
+                <label for="pwd">Comentarios:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="altText"
+                  placeholder="Comentarios"
+                  name="altText"
+                />
+              </div>
+              <div class="form-group">
+                <label for="pwd">Descripcion:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="description"
+                  placeholder="Descripcion"
+                  name="description"
+                />
+              </div>
+              <br />
+              <button type="submit" class="btn btn-primary">
+                Subir Archivo
+              </button>
+            </form>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

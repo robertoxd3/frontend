@@ -1,0 +1,86 @@
+<!-- <div class="row" style="margin-bottom:15px;">
+    <div class="col-md-3">
+      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;" multiple>
+      <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
+    </div>
+    <div class="col-md-4">
+      <span class="upload" *ngIf="progress > 0">
+        {{progress}}%
+      </span>
+      <span class="upload" *ngIf="message">
+        {{message}}
+      </span>
+    </div>
+  </div>
+   -->
+   <div class="card">
+    <p-messages [(value)]="messages" [enableService]="false" [closable]="true"></p-messages>
+  </div>
+
+        <p-dialog header="Login" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+          <form [formGroup]="loginForm" class="p-4" (ngSubmit)="login(loginForm)">
+            <div class="col-12 flex align-items-center justify-content-center">
+              <div class="p-fluid">
+                  <div class="field">
+                      <label for="username">Email</label>
+                      <input pInputText id="username" formControlName="userName"  type="text" />
+                  </div>
+                  <div class="field">
+                      <label for="password">Password</label>
+                      <input pInputText id="password" formControlName="password" type="password" />
+                  </div>
+                  <p-button type="submit" label="Login"></p-button>
+              </div>
+          </div>
+          </form>
+      </p-dialog>
+
+        <div class="col-5">
+            <p-button label="Logearse" icon="pi pi-user-plus" (click)="showDialog()" styleClass="p-button-success"></p-button>
+        </div>
+
+
+
+
+<div class="p-inputgroup  p-3 flex justify-content-center item-align-center">
+  <form [formGroup]="idForm" class="p-4" (ngSubmit)="getDocumento(idForm)">
+    <div class="row ">
+      <div class="col-10">
+        <input class="w-100" formControlName="id"  type="text" pInputText placeholder="Digite el id del documento" />
+      </div>
+      <div class="col-2">
+        <button type="submit" pButton icon="pi pi-search" styleClass="p-button-warn"></button>
+      </div>
+    </div>
+  
+  </form>
+</div>
+
+<div class="container">
+
+<div class="card">
+  <p-table [value]="document" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+          <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Acción</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-document>
+          <tr>
+              <td>{{ document.id }}</td>
+              <td>{{ document.nombre }}</td>
+              <td>{{ document.tipo }}</td>
+              <td>
+                  <p-button icon="pi pi-times" styleClass="p-button-danger" (click)="confirmDelete(document.id)"></p-button></td>
+          </tr>
+          <div *ngIf="!document || document.length === 0">
+            No hay datos para mostrar.
+          </div>
+      </ng-template>
+  </p-table>
+</div>
+</div>
+

@@ -86,6 +86,15 @@
         </ng-template>
         <div>
           <div class="container-fluid">
+            <div *ngIf="isloading" class="overlay">
+              <p-progressSpinner
+                styleClass="w-4rem h-4rem"
+                strokeWidth="8"
+                fill="var(--surface-ground)"
+                animationDuration=".5s"
+              ></p-progressSpinner>
+            </div>
+            <p-toast></p-toast>
             <h2>Formulario</h2>
             <form [formGroup]="fileForm" (ngSubmit)="saveFileInfo()">
               <div class="form-group">

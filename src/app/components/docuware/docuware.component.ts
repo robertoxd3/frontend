@@ -7,12 +7,13 @@ import{ Router } from '@angular/router';
 import { DocuwareService } from 'src/app/services/docuware.service';
 import { finalize } from 'rxjs/operators';
 import { FileUpload } from 'primeng/fileupload';
-import { SafePipeModule } from 'safe-pipe';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-docuware',
   templateUrl: './docuware.component.html',
-  styleUrls: ['./docuware.component.scss']
+  styleUrls: ['./docuware.component.scss'],
+  providers: [MessageService]
 })
 
 
@@ -25,13 +26,14 @@ export class DocuwareComponent implements OnInit{
   perPage = 10; 
   totalDocuments = 0;
   currentPage = 1;
+
   
   private httpClient=inject(HttpClient);
   baseUrlC: string="https://localhost:7230/";
   filetoUpload: any;
   files: any[] = [];
   fecha!: string;
-  constructor( private router: Router,  private _docuwareService: DocuwareService,private _fb: FormBuilder){
+  constructor(private messageService: MessageService, private router: Router,  private _docuwareService: DocuwareService,private _fb: FormBuilder){
     this.fileForm=this._fb.group({
       altText: [''],
       description: [''],
@@ -39,23 +41,17 @@ export class DocuwareComponent implements OnInit{
   }
 
   ngOnInit(): void {
-   // this.getAllFiles();
    this.getAllFiles();
     this.fecha=formatDate(new Date(), 'dd-MM-yyyy', 'en-US');
   }
 
-  // getAllFiles(){
-  //   this._docuwareService.getFileList().subscribe({
-  //     next: (res)=>{
-  //       console.log(res);
-  //       this.files= res;
-  //     },error(err) {
-  //       console.log(err);
-  //     },
-  //   })
-  // }
+  showSuccess() {
+        this.messageService.add({ severity: 'success', summary: 'Exito!', detail: 'Proceso realizado correctamente' });
+    }
 
-  
+  showFailure() {
+        this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Ops algo salio mal' });
+   }
 
   
 getAllFiles() {
@@ -131,19 +127,23 @@ onPageChange(event: any): void {
     formData.append('MyFile', this.filetoUpload);
     formData.append('altText', this.fileForm.value.altText);
     formData.append('description', this.fileForm.value.description);
-    
+    this.isloading=true;
+
     this._docuwareService.uploadFile(formData).pipe(
       finalize(() => {
         this.getAllFiles();
       })
     ).subscribe({
       next: (res) => {
-        alert("Archivo Subido correctamente");
         console.log(res); 
         this.fileForm.reset();
         this.clearFileUpload();
+        this.isloading=false;
+        this.showSuccess();
       },
       error: (err) => {
+          this.isloading=false;
+          this.showFailure();
         console.log("Error catch: " + err);
       }
     });

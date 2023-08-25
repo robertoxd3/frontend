@@ -13,36 +13,38 @@ export class AppComponent implements OnInit {
   items: MenuItem[] | undefined;
   messages: Message[] | undefined;
   constructor( private router: Router){}
-
+   sidebarVisible = false;
   ngOnInit() {
       this.items = [
           {
               label: 'Inicio',
               routerLink: '/',
               icon: 'pi pi-fw pi-home',
-
           },
-
-        //   {
-        //       label: 'Quit',
-        //       routerLink: '/',
-        //       icon: 'pi pi-fw pi-power-off'
-        //   }
+    {
+              label: 'Formulario',
+              routerLink: '/formulario',
+              icon: 'pi pi-fw pi-code',
+          },
+              {
+              label: 'Un Doc',
+              routerLink: '/unico',
+              icon: 'pi pi-fw pi-copy',
+          },
+              {
+              label: 'Docuware',
+              routerLink: '/docuware',
+              icon: 'pi pi-fw pi-cog',
+          },
       ];
 
   }
 
-  send(){
-    this.router.navigate(["/formulario"]);
+  toggleSidebar() {
+    this.sidebarVisible = !this.sidebarVisible;
   }
 
-  send2(){
-    this.router.navigate(["/unico"]);
-  }
- 
-  send3(){
-    this.router.navigate(["/docuware"]);
-  }
+
  
 
 }

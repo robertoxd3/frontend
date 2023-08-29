@@ -8,6 +8,7 @@ import { DocuwareService } from 'src/app/services/docuware.service';
 import { finalize } from 'rxjs/operators';
 import { FileUpload } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-docuware',
@@ -21,6 +22,8 @@ export class DocuwareComponent implements OnInit{
   @ViewChild('fileUploadComponent') fileUploadComponent!: FileUpload;
   fileForm: FormGroup;
   isloading: boolean=true;
+  thumbnail: any;
+  isImage: boolean =false;
   filteredDocument: any[] = [];
   searchTerm = '';
   perPage = 10; 
@@ -33,7 +36,7 @@ export class DocuwareComponent implements OnInit{
   filetoUpload: any;
   files: any[] = [];
   fecha!: string;
-  constructor(private messageService: MessageService, private router: Router,  private _docuwareService: DocuwareService,private _fb: FormBuilder){
+  constructor(private sanitizer:DomSanitizer, private messageService: MessageService, private router: Router,  private _docuwareService: DocuwareService,private _fb: FormBuilder){
     this.fileForm=this._fb.group({
       altText: [''],
       description: [''],
@@ -53,6 +56,7 @@ export class DocuwareComponent implements OnInit{
         this.messageService.add({ severity: 'error', summary: 'Error!', detail: 'Ops algo salio mal' });
    }
 
+
   
 getAllFiles() {
   this._docuwareService.getFileList().pipe(
@@ -66,6 +70,11 @@ getAllFiles() {
       this.totalDocuments = this.files.length;
       this.filterDocuments();
       this.isloading=false;
+
+    //  res.forEach((element: { id: number; contentType: string; }) => {
+    //      this.getPreview(element.id,element.contentType);  
+    //  });
+
     },
     error: (err) => {
       console.log(err);
@@ -73,6 +82,27 @@ getAllFiles() {
     }
   });
 }
+
+/*arrayBufferToBase64(buffer, type, fileName) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const file = window.btoa(binary);
+    const mimType = type === 'pdf' ? 'application/pdf' : type === 'xlsx' ? 'application/xlsx' : type === 'pptx' ? 'application/pptx' : type === 'csv' ? 'application/csv' : type === 'docx' ? 'application/docx' : type === 'jpg' ? 'application/jpg' : type === 'png' ? 'application/png' : '';
+
+    const url = `data:${mimType};base64,` + file;
+   this.SafeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+  }*/
 
 filterDocuments(): void {
   if (this.searchTerm === '') {
@@ -91,8 +121,6 @@ onPageChange(event: any): void {
   this.filteredDocument = this.files.slice(startIndex, endIndex);
 }
 
-
-
   handleFileInput(e: any) {
     this.filetoUpload = e?.target?.files[0];
   }
@@ -101,26 +129,6 @@ onPageChange(event: any): void {
     this.filetoUpload = evt[0];
  }
 
-  // saveFileInfo(){
-  //   const formData: FormData= new FormData();
-  //   formData.append('MyFile', this.filetoUpload);
-  //   formData.append('altText', this.fileForm.value.altText);
-  //   formData.append('description', this.fileForm.value.description);
-    
-  //   this._docuwareService.uploadFile(formData).subscribe({
-  //     next(res) {
-  //       alert("Archivo Subido correctamente")
-  //       console.log(res); 
-        
-  //     },error(err) {
-  //         console.log("Error catch: "+err);
-  //     },
-  //   })
-  //   /*return this.httpClient.post('https://localhost:7230/FileManager', formData,
-  //   {
-  //     headers : new HttpHeaders()})
-  //   .subscribe(() => alert("File uploaded"));*/
-  // }
 
   saveFileInfo() {
     const formData: FormData = new FormData();
@@ -162,6 +170,19 @@ onPageChange(event: any): void {
     }
  
   }
+
+  
+getPreview(id:number, contentType:string){
+      this._docuwareService.getPreviews(id).subscribe((data: Blob) => {
+        const blob = new Blob([data], { type: contentType });
+        const url= this.sanitizer.bypassSecurityTrustUrl(window.URL.createObjectURL(blob));
+        return url
+        },
+        (error) => {
+          console.error('Error fetching document', error);
+        }
+      );
+}
 
   clearFileUpload() {
     // Limpia el componente de carga de archivos

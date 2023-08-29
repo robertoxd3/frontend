@@ -20,6 +20,10 @@ export class DocuwareService {
     return this.httpClient.get(`${this.baseUrl}/${id}`, {responseType: 'blob'});
   }
 
+  getPreviews(id:number): Observable<any>{
+    return this.httpClient.get(`${this.baseUrl}/${id}`, {responseType: 'arraybuffer'})
+  }
+
   
   uploadFile(formData :any): Observable<any> {
     const headers = new HttpHeaders();

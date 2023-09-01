@@ -106,6 +106,7 @@
                 <p-fileUpload
                   #fileUploadComponent
                   mode="basic"
+                  [customUpload]="true"
                   name="file"
                   [showCancelButton]="true"
                   (onSelect)="onSelectFile($event.files)"

@@ -36,6 +36,11 @@ export class AppComponent implements OnInit {
               routerLink: '/docuware',
               icon: 'pi pi-fw pi-cog',
           },
+           {
+              label: 'Prototipo',
+              routerLink: '/prototipo',
+              icon: 'pi pi-fw pi-home',
+          },
       ];
 
   }

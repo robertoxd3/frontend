@@ -1,0 +1,236 @@
+<div class="container">
+  <div class="card">
+    <div *ngIf="loading" class="overlay">
+      <p-progressSpinner
+        styleClass="w-4rem h-4rem"
+        strokeWidth="8"
+        fill="var(--surface-ground)"
+        animationDuration=".5s"
+      ></p-progressSpinner>
+    </div>
+    <p-table
+      #dt
+      [value]="documents"
+      [(selection)]="selectedDocuments"
+      dataKey="id"
+      [rows]="10"
+      [showCurrentPageReport]="true"
+      [rowHover]="true"
+      [filterDelay]="0"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [paginator]="true"
+      [globalFilterFields]="[
+        'id',
+        'cliente',
+        'expediente',
+        'pretension',
+        'ubicacion',
+        'unidad',
+        'nombre',
+        'año',
+        'demandado',
+        'defensor',
+        'extension'
+      ]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="table-header">
+          <div class="w-100 flex justify-content-between">
+            <span class="p-input-icon-left d-none d-md-block">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Busqueda global"
+              />
+            </span>
+            <p-splitButton
+              label="ADICIONAR"
+              icon="pi pi-plus"
+              (onClick)="add()"
+              [model]="items"
+              styleClass="p-button-secondary"
+            ></p-splitButton>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="id">
+            <div class="flex justify-content-between align-items-center">
+              Id
+              <p-sortIcon field="id"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="cliente">
+            <div class="flex justify-content-between align-items-center">
+              Cliente
+              <p-sortIcon field="cliente"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="expediente">
+            <div class="flex justify-content-between align-items-center">
+              Expediente
+              <p-sortIcon field="expediente"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="pretension">
+            <div class="flex justify-content-between align-items-center">
+              Pretensión
+              <p-sortIcon field="pretension"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="ubicacion">
+            <div class="flex justify-content-between align-items-center">
+              Ubicación
+              <p-sortIcon field="ubicacion"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="unidad">
+            <div class="flex justify-content-between align-items-center">
+              Unidad
+              <p-sortIcon field="unidad"></p-sortIcon>
+            </div>
+          </th>
+
+          <th pSortableColumn="demandado">
+            <div class="flex justify-content-between align-items-center">
+              Demandado
+              <p-sortIcon field="demandado"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="defensor">
+            <div class="flex justify-content-between align-items-center">
+              Defensor
+              <p-sortIcon field="defensor"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="estado">
+            <div class="flex justify-content-between align-items-center">
+              Estado
+              <p-sortIcon field="estado"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="anio">
+            <div class="flex justify-content-between align-items-center">
+              Año
+              <p-sortIcon field="anio"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="nombre">
+            <div class="flex justify-content-between align-items-center">
+              Nombre
+              <p-sortIcon field="nombre"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="tamanio">
+            <div class="flex justify-content-between align-items-center">
+              Tamaño
+              <p-sortIcon field="tamanio"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="enlace">
+            <div class="flex justify-content-between align-items-center">
+              Enlace
+              <p-sortIcon field="enlace"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="extension">
+            <div class="flex justify-content-between align-items-center">
+              Extensión
+              <p-sortIcon field="extension"></p-sortIcon>
+            </div>
+          </th>
+          <th pSortableColumn="acciones">
+            <div class="flex justify-content-between align-items-center">
+              Acciones
+              <p-sortIcon field="acciones"></p-sortIcon>
+            </div>
+          </th>
+          <th style="width: 5rem"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-document>
+        <tr class="p-selectable-row">
+          <td>
+            <span class="p-column-title">Id</span>
+            {{ document.id }}
+          </td>
+          <td>
+            <span class="p-column-title">Cliente</span>
+            <span class="ml-1 vertical-align-middle">{{
+              document.cliente
+            }}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Expediente</span>
+            <span class="ml-1 vertical-align-middle">{{
+              document.expediente
+            }}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Pretensión</span>
+            <span class="ml-1 vertical-align-middle">{{
+              document.pretension
+            }}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Ubicación</span>
+            {{ document.ubicacion }}
+          </td>
+          <td>
+            <span class="p-column-title">Unidad</span>
+            {{ document.unidad }}
+          </td>
+          <td>
+            <span class="p-column-title">Demandado</span>
+            {{ document.demandado }}
+          </td>
+          <td>
+            <span class="p-column-title">Defensor</span>
+            {{ document.defensor }}
+          </td>
+          <td>
+            <span class="p-column-title">Estado</span>
+            {{ document.estado }}
+          </td>
+          <td>
+            <span class="p-column-title">Año</span>
+            {{ document["año"] }}
+          </td>
+          <td>
+            <span class="p-column-title">Nombre</span>
+            {{ document.nombre }}
+          </td>
+          <td>
+            <span class="p-column-title">Tamaño</span>
+            {{ document.tamanio }}
+          </td>
+          <td>
+            <span class="p-column-title">Enlace</span>
+            {{ document.enlace }}
+          </td>
+          <td>
+            <span class="p-column-title">Extension</span>
+            {{ document.extension }}
+          </td>
+
+          <td style="text-align: center">
+            <button
+              pButton
+              type="button"
+              class="p-button-secondary"
+              icon="pi pi-cog"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">No se encotró la información.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

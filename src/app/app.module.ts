@@ -25,6 +25,11 @@ import { DividerModule } from 'primeng/divider';
 import { MessagesModule } from 'primeng/messages';
 import { SafePipeModule } from 'safe-pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { PrototipoComponent } from './components/prototipo/prototipo.component';
+import { TagModule } from 'primeng/tag';
+import { SliderModule } from 'primeng/slider';
+import { PrototipoService } from './services/prototipo.service';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,7 @@ import { PaginatorModule } from 'primeng/paginator';
     FormularioComponent,
     DocuwareComponent,
     UploadComponent,
+    PrototipoComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,8 +61,12 @@ import { PaginatorModule } from 'primeng/paginator';
     MessagesModule,
     SafePipeModule ,
     PaginatorModule,
+    TagModule,
+    SliderModule,
+    SplitButtonModule,
+    
   ],
-  providers: [],
+  providers: [PrototipoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
